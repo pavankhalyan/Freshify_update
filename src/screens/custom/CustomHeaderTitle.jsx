@@ -1,9 +1,12 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
+
 const CustomHeaderTitle = () => {
   return (
     <View style={styles.headerTitleContainer}>
+    
+    
       <Text style={styles.greenText}>FRESH</Text>
       <Text style={styles.whiteText}>IFY</Text>
     </View>

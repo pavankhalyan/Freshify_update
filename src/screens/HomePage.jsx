@@ -32,8 +32,6 @@ const HomePage = () => {
   };
 
   const handleGoPress = () => {
-    // Implement functionality for Go button press
-    // For example, navigate to another screen or perform an action
     console.log('Go button pressed');
   };
 

@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-const Location = () => { 
+const Location = () => {
   const initialRegion = {
     latitude: 12.7409,
     longitude: 77.8236,
@@ -23,10 +23,10 @@ const Location = () => {
         />
       </MapView>
     </View>
-  )
-}
+  );
+};
 
-export default Location
+export default Location;
 
 const styles = StyleSheet.create({
   container: {
@@ -35,12 +35,4 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  text: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    fontSize: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    padding: 10,
-  },
-})
+});
