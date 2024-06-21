@@ -32,22 +32,22 @@ export default function App() {
             tabBarStyle: {
               backgroundColor: 'black',
               borderTopWidth: 0,
-              elevation: 10, 
+              elevation: 10,
               shadowOpacity: 0.25,
               shadowRadius: 10,
               shadowOffset: { width: 0, height: 10 },
             },
             headerStyle: {
-              backgroundColor: 'black', 
+              backgroundColor: 'black',
             },
-            headerTintColor: 'white', 
+            headerTintColor: 'white',
             headerTitle: () => <CustomHeaderTitle />,
           }}
         >
           <Tab.Screen
             name="Home"
             component={HomePage}
-            styles = {styles.icons}
+            styles={styles.icons}
             options={{
               tabBarLabel: 'Home',
               tabBarIcon: ({ color, size }) => (
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom : 5,
+    marginBottom: 5,
     width: 50,
     height: 50,
     borderRadius: 25,
