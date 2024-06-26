@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Login from './src/screens/Login';
-import { LinearGradient } from 'expo-linear-gradient';
-import Profile from './src/screens/Profile';
 import HomePage from './src/screens/HomePage';
+import Profile from './src/screens/Profile';
 import Truck from './src/screens/Truck';
 import Location from './src/screens/Location';
 import CustomHeaderTitle from './src/screens/custom/CustomHeaderTitle';
+import AuthNavigator from './src/screens/custom/AuthNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,7 +46,6 @@ export default function App() {
           <Tab.Screen
             name="Home"
             component={HomePage}
-            styles={styles.icons}
             options={{
               tabBarLabel: 'Home',
               tabBarIcon: ({ color, size }) => (
@@ -87,7 +85,7 @@ export default function App() {
           />
         </Tab.Navigator>
       ) : (
-        <Login setIsLoggedIn={setIsLoggedIn} />
+        <AuthNavigator setIsLoggedIn={setIsLoggedIn} />
       )}
     </NavigationContainer>
   );

@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
@@ -7,8 +7,8 @@ import * as Yup from 'yup';
 
 const Login = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
-  const [isPressed, setIsPressed] = useState(false);
-  const colorAnimation = useRef(new Animated.Value(0)).current;
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const handleLogin = (values) => {
     setIsLoggedIn(true);
@@ -17,30 +17,13 @@ const Login = ({ setIsLoggedIn }) => {
   const loginSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     mobileNumber: Yup.string().required('Mobile Number is required'),
-    password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
-  });
-
-  const handlePressIn = () => {
-    setIsPressed(true);
-    Animated.timing(colorAnimation, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    setIsPressed(false);
-    Animated.timing(colorAnimation, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const animatedColor = colorAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['white', 'green'],
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
   });
 
   return (
@@ -50,7 +33,7 @@ const Login = ({ setIsLoggedIn }) => {
         <Text style={styles.whiteText}>ify</Text>
       </Text>
       <Formik
-        initialValues={{ name: '', mobileNumber: '', password: '' }}
+        initialValues={{ name: '', mobileNumber: '', email: '', password: '', confirmPassword: '' }}
         validationSchema={loginSchema}
         onSubmit={handleLogin}
       >
@@ -84,34 +67,54 @@ const Login = ({ setIsLoggedIn }) => {
             {touched.mobileNumber && errors.mobileNumber && <Text style={styles.errorText}>{errors.mobileNumber}</Text>}
 
             <View style={styles.inputContainer}>
+              <FontAwesome name="envelope" size={20} color="white" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Enter your Email Address"
+                placeholderTextColor="white"
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
+              />
+            </View>
+            {touched.email && errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+
+            <View style={styles.inputContainer}>
               <FontAwesome name="lock" size={20} color="white" style={styles.inputIcon} />
               <TextInput
                 style={styles.textInput}
-                placeholder="Enter password"
+                placeholder="Create your own Password"
                 placeholderTextColor="white"
-                secureTextEntry
+                secureTextEntry={!passwordVisible}
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 value={values.password}
               />
+              <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+                <FontAwesome name={passwordVisible ? "eye" : "eye-slash"} size={20} color="white" style={styles.eyeIcon} />
+              </TouchableOpacity>
             </View>
             {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
+            <View style={styles.inputContainer}>
+              <FontAwesome name="lock" size={20} color="white" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Confirm Password"
+                placeholderTextColor="white"
+                secureTextEntry={!confirmPasswordVisible}
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+                value={values.confirmPassword}
+              />
+              <TouchableOpacity onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}>
+                <FontAwesome name={confirmPasswordVisible ? "eye" : "eye-slash"} size={20} color="white" style={styles.eyeIcon} />
+              </TouchableOpacity>
+            </View>
+            {touched.confirmPassword && errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
+
             <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignUp')}
-              onPressIn={handlePressIn}
-              onPressOut={handlePressOut}
-            >
-              <Animated.Text style={[styles.signup, { color: animatedColor }]}>
-                You don't have an Account?.. 
-                <Text style={styles.underline}> 
-                create account
-                </Text>
-              </Animated.Text>
             </TouchableOpacity>
           </>
         )}
@@ -160,6 +163,9 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'white',
   },
+  eyeIcon: {
+    marginRight: 10,
+  },
   loginButton: {
     backgroundColor: 'green',
     width: 200,
@@ -177,15 +183,5 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginBottom: 10,
-  },
-  signup: {
-    color: 'white',
-    marginTop: 20,
-  },
-  underline: {
-    textDecorationLine: 'underline',
-  },
-  pressed: {
-    color: 'green',
   },
 });
