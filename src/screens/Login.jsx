@@ -1,29 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated, Image } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 
 const Login = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
   const [isPressed, setIsPressed] = useState(false);
   const colorAnimation = useRef(new Animated.Value(0)).current;
-
-  const handleLogin = async (values) => {
-    try {
-      const response = await axios.post('http://192.168.0.104:5000/Login', values);
-      if (response.status === 200) {
-        setIsLoggedIn(true);
-      } else {
-        alert(response.data.message);
-      }
-    } catch (error) {
-      console.log(error)
-      alert('Login failed, please try again.', error);
-    }
-  };
 
   const loginSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -54,8 +39,15 @@ const Login = ({ setIsLoggedIn }) => {
     outputRange: ['white', 'green'],
   });
 
+  const onSubmit = async () => {
+    // Simulating login success
+    setIsLoggedIn(true);
+    navigation.navigate('Homepage'); // Navigate to 'Home' screen after successful login
+  };
+
   return (
     <View style={styles.container}>
+      <Image source={require('./custom/image/logo.png')} style={styles.logo} />
       <Text style={styles.title}>
         <Text style={styles.greenText}>Fresh</Text>
         <Text style={styles.whiteText}>ify</Text>
@@ -63,7 +55,7 @@ const Login = ({ setIsLoggedIn }) => {
       <Formik
         initialValues={{ name: '', mobileNumber: '', password: '' }}
         validationSchema={loginSchema}
-        onSubmit={handleLogin}
+        onSubmit={onSubmit}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <>
@@ -120,7 +112,7 @@ const Login = ({ setIsLoggedIn }) => {
               <Animated.Text style={[styles.signup, { color: animatedColor }]}>
                 You don't have an Account?.. 
                 <Text style={styles.underline}> 
-                create account
+                  create account
                 </Text>
               </Animated.Text>
             </TouchableOpacity>
@@ -140,10 +132,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  logo: {
+    width: 200,
+    height: 150,
+    marginBottom: 20,
+    resizeMode: 'contain',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 50,
     marginBottom: 30,
     flexDirection: 'row',
   },
@@ -195,8 +192,5 @@ const styles = StyleSheet.create({
   },
   underline: {
     textDecorationLine: 'underline',
-  },
-  pressed: {
-    color: 'green',
   },
 });
