@@ -61,7 +61,7 @@ const Location = () => {
         {route.length > 0 && (
           <Polyline
             coordinates={route}
-            strokeColor="#00FF00" // Green
+            strokeColor="#00FF00" 
             strokeWidth={6}
           />
         )}
