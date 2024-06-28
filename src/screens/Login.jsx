@@ -4,14 +4,25 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 
 const Login = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
   const [isPressed, setIsPressed] = useState(false);
   const colorAnimation = useRef(new Animated.Value(0)).current;
 
-  const handleLogin = (values) => {
-    setIsLoggedIn(true);
+  const handleLogin = async (values) => {
+    try {
+      const response = await axios.post('http://192.168.0.104:5000/Login', values);
+      if (response.status === 200) {
+        setIsLoggedIn(true);
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.log(error)
+      alert('Login failed, please try again.', error);
+    }
   };
 
   const loginSchema = Yup.object().shape({
