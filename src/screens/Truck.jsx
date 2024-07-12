@@ -52,7 +52,7 @@ const Truck = () => {
         <FontAwesome name="archive" size={40} color="green" />
         <FontAwesome name="archive" size={40} color="green" />
         <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
+        <FontAwesome name="archive" size={40} color="green" />    
         </View>
         <View style = {styles.box}> 
         <FontAwesome name="archive" size={40} color="green" />

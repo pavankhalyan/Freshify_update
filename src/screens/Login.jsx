@@ -40,9 +40,8 @@ const Login = ({ setIsLoggedIn }) => {
   });
 
   const onSubmit = async () => {
-    // Simulating login success
     setIsLoggedIn(true);
-    navigation.navigate('Homepage'); // Navigate to 'Home' screen after successful login
+    navigation.navigate('Homepage'); 
   };
 
   return (
