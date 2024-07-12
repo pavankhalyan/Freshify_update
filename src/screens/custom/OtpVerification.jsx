@@ -4,7 +4,7 @@ import React from 'react'
 const OtpVerification = () => {
   return (
     <View>
-      <Text>OtpVerification</Text>
+      <Text>Otp</Text>
     </View>
   )
 }
