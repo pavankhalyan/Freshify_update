@@ -41,7 +41,7 @@ const Login = ({ setIsLoggedIn }) => {
 
   const onSubmit = async () => {
     setIsLoggedIn(true);
-    navigation.navigate('Homepage'); 
+    navigation.navigate('Home'); 
   };
 
   return (
