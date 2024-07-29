@@ -35,7 +35,7 @@ const Profile = () => {
       </View>
       
       <View style={styles.badgeContainer}>
-        <View style={styles.badgeBox}>
+        {/* <View style={styles.badgeBox}>
           <Badge text="Badge 1" imageSource={require('./images/badge1.png')} />
         </View>
         <View style={styles.badgeBox}>
@@ -43,7 +43,7 @@ const Profile = () => {
         </View>
         <View style={styles.badgeBox}>
           <Badge text="Badge 3" imageSource={require('./images/badge3.png')} />
-        </View>
+        </View> */}
       </View>
     </View>
   );

@@ -114,7 +114,7 @@ const Login = ({ setIsLoggedIn }) => {
             {touched.confirmPassword && errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
 
             <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>Create Account</Text>
             </TouchableOpacity>
           </>
         )}
