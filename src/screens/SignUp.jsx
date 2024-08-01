@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
@@ -26,7 +26,11 @@ const SignUp = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
       navigation.navigate('Home');
     }catch(err){
-      console.log("error in signing up",err);
+      Animated.sequence([
+        Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnimation, { toValue: -10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnimation, { toValue: 0, duration: 50, useNativeDriver: true }),
+      ]).start();
     }
   };
 
@@ -130,8 +134,13 @@ const SignUp = ({ setIsLoggedIn }) => {
             {touched.confirmPassword && errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
 
             <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Create Account</Text>
+              <Text style={styles.buttonText}>sign Up</Text>
             </TouchableOpacity>
+             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+             <Text style={styles.signup}>
+                Already have an account? <Text style={styles.underline}>Log in</Text>
+              </Text>
+             </TouchableOpacity>
           </>
         )}
       </Formik>
@@ -199,5 +208,12 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginBottom: 10,
+  },
+  signup: {
+    color: 'white',
+    marginTop: 20,
+  },
+  underline: {
+    textDecorationLine: 'underline',
   },
 });
