@@ -4,8 +4,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { auth } from './firebaseConfig';
+import { auth } from './firebaseConfig'
 import { signInWithEmailAndPassword } from 'firebase/auth';
+
 
 const Login = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();

@@ -4,7 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { auth,db } from '../../firebaseConfig'; 
+import { auth,db } from './firebaseConfig'; 
 import { createUserWithEmailAndPassword } from 'firebase/auth'; 
 import { doc,setDoc } from 'firebase/firestore';
 
