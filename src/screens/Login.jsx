@@ -4,45 +4,32 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { auth } from './firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
-  const [isPressed, setIsPressed] = useState(false);
-  const colorAnimation = useRef(new Animated.Value(0)).current;
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
+
+  const handleLogin = async (values) => {
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      setIsLoggedIn(true);
+      navigation.navigate('Home');
+    } catch (error) {
+      Animated.sequence([
+        Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnimation, { toValue: -10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnimation, { toValue: 0, duration: 50, useNativeDriver: true }),
+      ]).start();
+    }
+  };
 
   const loginSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    mobileNumber: Yup.string().required('Mobile Number is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
   });
-
-  const handlePressIn = () => {
-    setIsPressed(true);
-    Animated.timing(colorAnimation, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    setIsPressed(false);
-    Animated.timing(colorAnimation, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const animatedColor = colorAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['white', 'green'],
-  });
-
-  const onSubmit = async () => {
-    setIsLoggedIn(true);
-    navigation.navigate('Home'); 
-  };
 
   return (
     <View style={styles.container}>
@@ -52,68 +39,50 @@ const Login = ({ setIsLoggedIn }) => {
         <Text style={styles.whiteText}>ify</Text>
       </Text>
       <Formik
-        initialValues={{ name: '', mobileNumber: '', password: '' }}
+        initialValues={{ email: '', password: '' }}
         validationSchema={loginSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleLogin}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <>
-            <View style={styles.inputContainer}>
-              <FontAwesome name="user" size={20} color="white" style={styles.inputIcon} />
+            <Animated.View style={[styles.inputContainer, { transform: [{ translateX: shakeAnimation }] }]}>
+              <FontAwesome name="envelope" size={20} color="white" style={styles.inputIcon} />
               <TextInput
                 style={styles.textInput}
-                placeholder="Enter your name"
+                placeholder="Enter your Email Address"
                 placeholderTextColor="white"
-                onChangeText={handleChange('name')}
-                onBlur={handleBlur('name')}
-                value={values.name}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
               />
-            </View>
-            {touched.name && errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+            </Animated.View>
+            {touched.email && errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-            <View style={styles.inputContainer}>
-              <FontAwesome name="phone" size={20} color="white" style={styles.inputIcon} />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Enter your Mobile Number"
-                placeholderTextColor="white"
-                keyboardType="phone-pad"
-                onChangeText={handleChange('mobileNumber')}
-                onBlur={handleBlur('mobileNumber')}
-                value={values.mobileNumber}
-              />
-            </View>
-            {touched.mobileNumber && errors.mobileNumber && <Text style={styles.errorText}>{errors.mobileNumber}</Text>}
-
-            <View style={styles.inputContainer}>
+            <Animated.View style={[styles.inputContainer, { transform: [{ translateX: shakeAnimation }] }]}>
               <FontAwesome name="lock" size={20} color="white" style={styles.inputIcon} />
               <TextInput
                 style={styles.textInput}
-                placeholder="Enter password"
+                placeholder="Enter your Password"
                 placeholderTextColor="white"
-                secureTextEntry
+                secureTextEntry={!passwordVisible}
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 value={values.password}
               />
-            </View>
+              <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+                <FontAwesome name={passwordVisible ? "eye" : "eye-slash"} size={20} color="white" style={styles.eyeIcon} />
+              </TouchableOpacity>
+            </Animated.View>
             {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
             <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignUp')}
-              onPressIn={handlePressIn}
-              onPressOut={handlePressOut}
-            >
-              <Animated.Text style={[styles.signup, { color: animatedColor }]}>
-                You don't have an Account?.. 
-                <Text style={styles.underline}> 
-                  create account
-                </Text>
-              </Animated.Text>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+              <Text style={styles.signup}>
+                Don't have an account? <Text style={styles.underline}>Create one</Text>
+              </Text>
             </TouchableOpacity>
           </>
         )}
@@ -167,6 +136,9 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'white',
   },
+  eyeIcon: {
+    marginRight: 10,
+  },
   loginButton: {
     backgroundColor: 'green',
     width: 200,
@@ -193,3 +165,4 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 });
+

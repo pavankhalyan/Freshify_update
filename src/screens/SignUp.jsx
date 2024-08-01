@@ -12,6 +12,7 @@ const SignUp = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
 
   const handlesignUp = async (values) => {
     try{
