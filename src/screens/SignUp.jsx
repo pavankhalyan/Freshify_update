@@ -1,20 +1,41 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { auth,db } from './firebaseConfig'; 
+import { createUserWithEmailAndPassword } from 'firebase/auth'; 
+import { doc,setDoc } from 'firebase/firestore';
 
-const Login = ({ setIsLoggedIn }) => {
+const SignUp = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
 
-  const handleLogin = (values) => {
-    setIsLoggedIn(true);
+  const handlesignUp = async (values) => {
+    try{
+      const userCredentails = await createUserWithEmailAndPassword(auth,values.email,values.password);
+      const user = userCredentails.user;
+
+      await setDoc(doc(db,"users",user.uid),{
+        name: values.name,
+        mobileNumber: values.mobileNumber,
+        email: values.email,
+      })    
+      setIsLoggedIn(true);
+      navigation.navigate('Home');
+    }catch(err){
+      Animated.sequence([
+        Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnimation, { toValue: -10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnimation, { toValue: 0, duration: 50, useNativeDriver: true }),
+      ]).start();
+    }
   };
 
-  const loginSchema = Yup.object().shape({
+  const signUpSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     mobileNumber: Yup.string().required('Mobile Number is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -34,8 +55,8 @@ const Login = ({ setIsLoggedIn }) => {
       </Text>
       <Formik
         initialValues={{ name: '', mobileNumber: '', email: '', password: '', confirmPassword: '' }}
-        validationSchema={loginSchema}
-        onSubmit={handleLogin}
+        validationSchema={signUpSchema}
+        onSubmit={handlesignUp}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <>
@@ -114,8 +135,13 @@ const Login = ({ setIsLoggedIn }) => {
             {touched.confirmPassword && errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
 
             <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>sign Up</Text>
             </TouchableOpacity>
+             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+             <Text style={styles.signup}>
+                Already have an account? <Text style={styles.underline}>Log in</Text>
+              </Text>
+             </TouchableOpacity>
           </>
         )}
       </Formik>
@@ -123,7 +149,7 @@ const Login = ({ setIsLoggedIn }) => {
   );
 };
 
-export default Login;
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
@@ -183,5 +209,12 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginBottom: 10,
+  },
+  signup: {
+    color: 'white',
+    marginTop: 20,
+  },
+  underline: {
+    textDecorationLine: 'underline',
   },
 });

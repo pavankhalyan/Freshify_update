@@ -11,12 +11,11 @@ const Location = () => {
 
   useEffect(() => {
     const fetchRoute = async () => {
-      const apiKey = 'YOUR_GOOGLE_API_KEY'; // Replace with your Google API key
-      const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${hosur.latitude},${hosur.longitude}&destination=${coimbatore.latitude},${coimbatore.longitude}&key=${apiKey}`;
       try {
-        const response = await axios.get(url);
-        const points = decode(response.data.routes[0].overview_polyline.points);
-        setRoute(points);
+        const response = await axios.get(`https://maps.googleapis.com/maps/api/directions/json?origin=${hosur.latitude},${hosur.longitude}&destination=${coimbatore.latitude},${coimbatore.longitude}&key=YOUR_GOOGLE_MAPS_API_KEY`);
+        const points = response.data.routes[0].overview_polyline.points;
+        const decodedPoints = decode(points);
+        setRoute(decodedPoints);
       } catch (error) {
         console.error(error);
       }
@@ -27,20 +26,22 @@ const Location = () => {
 
   const decode = (t, e = 5) => {
     let points = [];
-    for (let step of t.split('?')) {
-      let x = 0, y = 0;
-      let stepBytes = step.split('').map(char => char.charCodeAt(0) - 63);
-      for (let i = 0; i < stepBytes.length; ) {
-        let pointByte = [];
-        do {
-          pointByte.push(stepBytes[i++]);
-        } while (pointByte[pointByte.length - 1] >= 0x20);
-        let result = pointByte.reduce((sum, byte, idx) => sum | ((byte & 0x1f) << (idx * 5)), 0);
-        let shift = (result & 1) ? ~(result >> 1) : (result >> 1);
-        x += shift;
-        y += shift;
-        points.push({ latitude: x * 1e-5, longitude: y * 1e-5 });
-      }
+    for (let step = 0, lat = 0, lng = 0; step < t.length;) {
+      let a, b, res = 1, shift = 0;
+      do {
+        a = t.charCodeAt(step++) - 63 - 1;
+        res += a << shift;
+        shift += 5;
+      } while (a >= 0x1f);
+      lat += (res & 1 ? ~(res >> 1) : res >> 1);
+      res = 1, shift = 0;
+      do {
+        b = t.charCodeAt(step++) - 63 - 1;
+        res += b << shift;
+        shift += 5;
+      } while (b >= 0x1f);
+      lng += (res & 1 ? ~(res >> 1) : res >> 1);
+      points.push({ latitude: lat / 1e5, longitude: lng / 1e5 });
     }
     return points;
   };
@@ -52,19 +53,13 @@ const Location = () => {
         initialRegion={{
           latitude: (hosur.latitude + coimbatore.latitude) / 2,
           longitude: (hosur.longitude + coimbatore.longitude) / 2,
-          latitudeDelta: 3.0,
-          longitudeDelta: 3.0,
+          latitudeDelta: 2,
+          longitudeDelta: 2,
         }}
       >
         <Marker coordinate={hosur} title="Hosur" />
         <Marker coordinate={coimbatore} title="Coimbatore" />
-        {route.length > 0 && (
-          <Polyline
-            coordinates={route}
-            strokeColor="#00FF00" 
-            strokeWidth={6}
-          />
-        )}
+        {route.length > 0 && <Polyline coordinates={route} strokeWidth={4} strokeColor="green" />}
       </MapView>
     </View>
   );
@@ -75,7 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
   },
 });
 
