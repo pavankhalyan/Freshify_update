@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { auth,db } from './firebaseConfig'; 
-import { createUserWithEmailAndPassword } from 'firebase/auth'; 
-import { doc,setDoc } from 'firebase/firestore';
+import { auth, db } from './firebaseConfig'; // Update import path
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 const SignUp = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
@@ -15,18 +15,20 @@ const SignUp = ({ setIsLoggedIn }) => {
   const shakeAnimation = useRef(new Animated.Value(0)).current;
 
   const handlesignUp = async (values) => {
-    try{
-      const userCredentails = await createUserWithEmailAndPassword(auth,values.email,values.password);
-      const user = userCredentails.user;
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredentials.user;
 
-      await setDoc(doc(db,"users",user.uid),{
+      await setDoc(doc(db, "users", user.uid), {
         name: values.name,
         mobileNumber: values.mobileNumber,
         email: values.email,
-      })    
+      });
+
       setIsLoggedIn(true);
       navigation.navigate('Home');
-    }catch(err){
+    } catch (err) {
+      console.error('SignUp Error:', err);
       Animated.sequence([
         Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
         Animated.timing(shakeAnimation, { toValue: -10, duration: 50, useNativeDriver: true }),
@@ -135,21 +137,19 @@ const SignUp = ({ setIsLoggedIn }) => {
             {touched.confirmPassword && errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
 
             <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>sign Up</Text>
+              <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
-             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-             <Text style={styles.signup}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.signup}>
                 Already have an account? <Text style={styles.underline}>Log in</Text>
               </Text>
-             </TouchableOpacity>
+            </TouchableOpacity>
           </>
         )}
       </Formik>
     </View>
   );
 };
-
-export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
@@ -204,17 +204,22 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
   },
   signup: {
     color: 'white',
+    fontSize: 15,
     marginTop: 20,
   },
   underline: {
     textDecorationLine: 'underline',
   },
+  errorText: {
+    color: 'red',
+    marginTop: 5,
+    marginBottom: 10,
+    marginLeft: 10,
+    alignSelf: 'flex-start',
+  },
 });
+
+export default SignUp;

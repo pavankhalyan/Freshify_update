@@ -17,7 +17,7 @@ const Login = ({ setIsLoggedIn }) => {
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
       setIsLoggedIn(true);
-      navigation.navigate('Home');
+      navigation.navigate('home');
     } catch (error) {
       Animated.sequence([
         Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
