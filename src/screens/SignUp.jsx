@@ -4,17 +4,33 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { auth,db } from '../../firebaseConfig'; 
+import { createUserWithEmailAndPassword } from 'firebase/auth'; 
+import { doc,setDoc } from 'firebase/firestore';
 
-const Login = ({ setIsLoggedIn }) => {
+const SignUp = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  const handleLogin = (values) => {
-    setIsLoggedIn(true);
+  const handlesignUp = async (values) => {
+    try{
+      const userCredentails = await createUserWithEmailAndPassword(auth,values.email,values.password);
+      const user = userCredentails.user;
+
+      await setDoc(doc(db,"users",user.uid),{
+        name: values.name,
+        mobileNumber: values.mobileNumber,
+        email: values.email,
+      })    
+      setIsLoggedIn(true);
+      navigation.navigate('Home');
+    }catch(err){
+      console.log("error in signing up",err);
+    }
   };
 
-  const loginSchema = Yup.object().shape({
+  const signUpSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     mobileNumber: Yup.string().required('Mobile Number is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -34,8 +50,8 @@ const Login = ({ setIsLoggedIn }) => {
       </Text>
       <Formik
         initialValues={{ name: '', mobileNumber: '', email: '', password: '', confirmPassword: '' }}
-        validationSchema={loginSchema}
-        onSubmit={handleLogin}
+        validationSchema={signUpSchema}
+        onSubmit={handlesignUp}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <>
@@ -123,7 +139,7 @@ const Login = ({ setIsLoggedIn }) => {
   );
 };
 
-export default Login;
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
