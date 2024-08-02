@@ -19,7 +19,7 @@
 
 ### Technologies used
 
-Web Application: Develop a web application using **React** for tailoring the ripening of consumables according to the travel destination.
+Mobile Application: Develop a mobile application using **React Native** for tailoring the ripening of consumables according to the travel destination.
 
 Ethylene Gas Monitoring: Utilize **ethylene gas monitoring** technology to optimize freshness during transit, extending the shelf life of fruits and vegetables.
 
