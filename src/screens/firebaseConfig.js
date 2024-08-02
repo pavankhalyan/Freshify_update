@@ -1,38 +1,29 @@
-// Import necessary Firebase modules
-import { initializeApp } from "firebase/app";
-import { getAnalytics, isSupported as isAnalyticsSupported } from "firebase/analytics";
-import { getAuth, initializeAuth, getReactNativePersistence } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore } from 'firebase/firestore';
 
-// Firebase configuration
 const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-auth-domain",
-  projectId: "your-project-id",
-  storageBucket: "your-storage-bucket",
-  messagingSenderId: "your-messaging-sender-id",
-  appId: "your-app-id",
-  measurementId: "your-measurement-id"
+  apiKey: "AIzaSyBa5riUYI4tyMVfIXBH3cB5tXP-9v-7nGs",
+  authDomain: "freshify-acff7.firebaseapp.com",
+  projectId: "freshify-acff7",
+  storageBucket: "freshify-acff7.appspot.com",
+  messagingSenderId: "335844311119",
+  appId: "1:335844311119:web:c23269adef693ca6036a3a",
+  measurementId: "G-ZNH3SCJGY4"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let app;
 
-// Initialize Analytics if supported
-let analytics;
-isAnalyticsSupported().then((supported) => {
-  if (supported) {
-    analytics = getAnalytics(app);
-  }
-});
+if (getApps().length === 0) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
+}
 
-// Initialize Auth with persistence
 const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage)
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
-
-// Initialize Firestore
 const db = getFirestore(app);
 
-export { app, analytics, auth, db };
+export { auth, db };
