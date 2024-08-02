@@ -2,11 +2,10 @@
 
 
 ### Team Members
-[1.Krishna Paresh Raichura](https://github.com/kingof64sqrs)  
-[2.Siva Nithish Kumar D](https://github.com/sivanithishkumar)  
-[3.Sreejha](https://github.com/Sreejha-Jagadeesh)
-[4.Rajesh](https://github.com/rajesh-05)  
-[5.Jaiguru](https://github.com/jai2992)
+[1.Krishna Paresh Raichura]
+[2.Pavan Khalyan] 
+[3.Pious k george]
+[4.Sreejha]  
 
 ### Link to Project
 
