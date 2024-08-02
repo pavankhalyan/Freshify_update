@@ -4,9 +4,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { auth } from './firebaseConfig'
+import { auth, db } from './firebaseConfig'; 
 import { signInWithEmailAndPassword } from 'firebase/auth';
-
+import { doc, setDoc } from 'firebase/firestore';
 
 const Login = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
@@ -15,10 +15,18 @@ const Login = ({ setIsLoggedIn }) => {
 
   const handleLogin = async (values) => {
     try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredential.user;
+
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        lastLogin: new Date().toISOString(),
+      });
+
       setIsLoggedIn(true);
-      navigation.navigate('home');
+      navigation.navigate('Homepage');
     } catch (error) {
+      console.error(error);
       Animated.sequence([
         Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
         Animated.timing(shakeAnimation, { toValue: -10, duration: 50, useNativeDriver: true }),
@@ -166,4 +174,3 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 });
-

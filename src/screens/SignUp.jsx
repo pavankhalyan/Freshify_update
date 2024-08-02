@@ -4,7 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { auth, db } from './firebaseConfig'; // Update import path
+import { auth, db } from './firebaseConfig'; 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 
@@ -26,7 +26,7 @@ const SignUp = ({ setIsLoggedIn }) => {
       });
 
       setIsLoggedIn(true);
-      navigation.navigate('Home');
+      navigation.navigate('Homepage');
     } catch (err) {
       console.error('SignUp Error:', err);
       Animated.sequence([
