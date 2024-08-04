@@ -2,10 +2,10 @@
 
 
 ### Team Members
-[1.Krishna Paresh Raichura]
-[2.Pavan Khalyan] 
-[3.Pious k george]
-[4.Sreejha]  
+1.Krishna Paresh Raichura
+2.Pavan Khalyan 
+3.Pious k george
+4.Sreejha
 
 ### Link to Project
 
@@ -49,7 +49,13 @@ Machine Learning Model: Integrate a **regression model** with an accuracy of **8
 Instructions for setting up project
 
 ### How to Run
-Instructions for running
+Instructions for running 
+
+npm install 
+
+npm start 
+
+scan QR code
 
 ### Other Links
 *[Figma design](https://www.figma.com/file/1PTf7BdSRo8cdrJRsGBCPt/Untitled?type=design&node-id=0%3A1&mode=design&t=R4DKmBDUk1bMcUYS-1)*
