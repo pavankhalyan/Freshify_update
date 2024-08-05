@@ -55,7 +55,9 @@ npm install
 
 npm start 
 
-scan QR code
+scan QR code 
+
+Hardwares used: ethylene gas sensor, can be used raspberry pi or nvidia jetson nano, temperature, humidity
 
 ### Other Links
 *[Figma design](https://www.figma.com/file/1PTf7BdSRo8cdrJRsGBCPt/Untitled?type=design&node-id=0%3A1&mode=design&t=R4DKmBDUk1bMcUYS-1)*
