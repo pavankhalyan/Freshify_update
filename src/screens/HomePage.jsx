@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Picker } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
 const HomePage = () => {
   const [selectedBox, setSelectedBox] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState('select');
   const [isPickupSelected, setIsPickupSelected] = useState(false);
   const [isDeliverySelected, setIsDeliverySelected] = useState(false);
+  const [numberOfBoxes, setNumberOfBoxes] = useState(0);
+
+  const navigation = useNavigation();
 
   const vehicles = [
     { id: 1, image: require('./images/dost1.webp') },
@@ -32,7 +35,7 @@ const HomePage = () => {
   };
 
   const handleGoPress = () => {
-    console.log('Go button pressed');
+    navigation.navigate('Truck', { numberOfBoxes });
   };
 
   return (
@@ -63,6 +66,16 @@ const HomePage = () => {
         <Picker.Item label="Banana" value="banana" />
         <Picker.Item label="Tomato" value="tomato" />
       </Picker>
+      <Text style={styles.details}>Select Number of Boxes</Text>
+      <Picker
+        selectedValue={numberOfBoxes}
+        style={styles.dropdown}
+        onValueChange={(itemValue) => setNumberOfBoxes(itemValue)}
+      >
+        {[...Array(10).keys()].map((n) => (
+          <Picker.Item key={n + 1} label={`${n + 1}`} value={n + 1} />
+        ))}
+      </Picker>
       <View style={styles.checkboxContainer}>
         <TouchableOpacity style={styles.checkbox} onPress={togglePickup}>
           <FontAwesome
@@ -81,9 +94,6 @@ const HomePage = () => {
           <Text style={styles.checkboxLabel}>Delivery</Text>
         </TouchableOpacity>
       </View>
-      <View style = {styles.b}> 
-
-      </View>
       <TouchableOpacity style={styles.goButton} onPress={handleGoPress}>
         <Text style={styles.goButtonText}>Go</Text>
       </TouchableOpacity>
@@ -97,6 +107,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    paddingHorizontal: 20,
   },
   vehicles: {
     marginTop: 20,
@@ -132,7 +143,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 50,
-    width: 370,
+    width: '100%',
     backgroundColor: 'white',
     marginTop: 20,
   },
@@ -151,16 +162,13 @@ const styles = StyleSheet.create({
   },
   goButton: {
     backgroundColor: 'green',
-    height : 50,
-    width : 100 ,
     borderRadius: 5,
-    marginTop: 70,
-    justifyContent : 'center',
-    alignItems : 'center',
-    marginLeft : 130,
+    marginTop: 30,
+    paddingVertical: 15,
+    alignItems: 'center',
   },
   goButtonText: {
     color: 'white',
-    fontSize: 30,
+    fontSize: 20,
   },
 });

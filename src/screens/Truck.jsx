@@ -1,68 +1,32 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useRoute } from '@react-navigation/native';
 
 const Truck = () => {
+  const route = useRoute();
+  const { numberOfBoxes } = route.params;
+
+  const renderBoxes = () => {
+    const boxes = [];
+    for (let i = 0; i < numberOfBoxes; i++) {
+      boxes.push(
+        <View key={i} style={styles.box}>
+          <FontAwesome name="archive" size={50} color="green" />
+          <Text style={styles.boxText}>{`Box ${i + 1}`}</Text>
+        </View>
+      );
+    }
+    return boxes;
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Current Trip</Text>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        </View>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        </View>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        </View>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        </View>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        </View>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        </View>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        </View>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />    
-        </View>
-        <View style = {styles.box}> 
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        <FontAwesome name="archive" size={40} color="green" />
-        </View>
+      <Text style={styles.text}>Selected Boxes</Text>
+      {renderBoxes()}
     </View>
   );
-}
+};
 
 export default Truck;
 
@@ -70,18 +34,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   text: {
     color: 'green',
-    fontSize: 18,
+    fontSize: 24,
     marginBottom: 20,
-    alignItems : 'center',
-    paddingRight : '24',
+    textAlign: 'center',
   },
   box: {
     flexDirection: 'row',
-    padding : 10,
-    justifyContent :'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: 'green',
+    padding: 10,
+    borderRadius: 5,
   },
   boxText: {
     color: 'white',
