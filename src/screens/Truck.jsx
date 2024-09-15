@@ -1,29 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useRoute } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import icons
 
 const Truck = () => {
-  const route = useRoute();
-  const { numberOfBoxes } = route.params;
-
-  const renderBoxes = () => {
-    const boxes = [];
-    for (let i = 0; i < numberOfBoxes; i++) {
-      boxes.push(
-        <View key={i} style={styles.box}>
-          <FontAwesome name="archive" size={50} color="green" />
-          <Text style={styles.boxText}>{`Box ${i + 1}`}</Text>
-        </View>
-      );
-    }
-    return boxes;
-  };
+  const numberOfBoxes = 6; // Example for 6 boxes
+  const boxes = Array.from({ length: numberOfBoxes }, (_, i) => i + 1); // Create an array for the boxes
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Selected Boxes</Text>
-      {renderBoxes()}
+      <View style={styles.gridContainer}>
+        {boxes.map((boxId) => (
+          <TouchableOpacity key={boxId} style={styles.box}>
+            <Icon name="dropbox" size={40} color="white" style={styles.icon} />
+            <Text style={styles.boxText}>Box {boxId}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };
@@ -35,26 +27,33 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingVertical: 30,
   },
-  text: {
+  header: {
     color: 'green',
-    fontSize: 24,
+    fontSize: 25,
     marginBottom: 20,
     textAlign: 'center',
   },
-  box: {
+  gridContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap', // Allows the items to wrap to the next line
+    justifyContent: 'space-between', // Distribute boxes evenly
+  },
+  box: {
+    backgroundColor: 'green',
+    borderRadius: 10,
+    width: '45%', // 45% width to fit two boxes in a row
+    height: 120,
+    justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 20,
+  },
+  icon: {
     marginBottom: 10,
-    borderWidth: 1,
-    borderColor: 'green',
-    padding: 10,
-    borderRadius: 5,
   },
   boxText: {
     color: 'white',
     fontSize: 18,
-    marginLeft: 10,
   },
 });
