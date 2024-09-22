@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
 const HomePage = () => {
   const [selectedBox, setSelectedBox] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState('select');
-  const [isPickupSelected, setIsPickupSelected] = useState(false);
-  const [isDeliverySelected, setIsDeliverySelected] = useState(false);
+  const [numberOfBoxes, setNumberOfBoxes] = useState(0);
+
+  const navigation = useNavigation();
 
   const vehicles = [
     { id: 1, image: require('./images/dost1.webp') },
@@ -23,16 +24,14 @@ const HomePage = () => {
     setSelectedProduct(itemValue);
   };
 
-  const togglePickup = () => {
-    setIsPickupSelected(!isPickupSelected);
-  };
-
-  const toggleDelivery = () => {
-    setIsDeliverySelected(!isDeliverySelected);
-  };
-
   const handleGoPress = () => {
-    console.log('Go button pressed');
+    // Create a mapping of selected boxes to selected products
+    const productsByBox = {
+      [selectedBox]: selectedProduct,
+    };
+
+    // Navigate to Truck component and pass data
+    navigation.navigate('Truck', { numberOfBoxes, productsByBox });
   };
 
   return (
@@ -42,16 +41,14 @@ const HomePage = () => {
         {vehicles.map((vehicle) => (
           <TouchableOpacity
             key={vehicle.id}
-            style={[
-              styles.box,
-              selectedBox === vehicle.id && styles.selectedBox,
-            ]}
+            style={[styles.box, selectedBox === vehicle.id && styles.selectedBox]}
             onPress={() => handleSelectBox(vehicle.id)}
           >
             <Image source={vehicle.image} style={styles.image} />
           </TouchableOpacity>
         ))}
       </View>
+
       <Text style={styles.details}>Details</Text>
       <Picker
         selectedValue={selectedProduct}
@@ -63,27 +60,18 @@ const HomePage = () => {
         <Picker.Item label="Banana" value="banana" />
         <Picker.Item label="Tomato" value="tomato" />
       </Picker>
-      <View style={styles.checkboxContainer}>
-        <TouchableOpacity style={styles.checkbox} onPress={togglePickup}>
-          <FontAwesome
-            name={isPickupSelected ? 'check-square-o' : 'square-o'}
-            size={20}
-            color="white"
-          />
-          <Text style={styles.checkboxLabel}>Pickup</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.checkbox} onPress={toggleDelivery}>
-          <FontAwesome
-            name={isDeliverySelected ? 'check-square-o' : 'square-o'}
-            size={20}
-            color="white"
-          />
-          <Text style={styles.checkboxLabel}>Delivery</Text>
-        </TouchableOpacity>
-      </View>
-      <View style = {styles.b}> 
 
-      </View>
+      <Text style={styles.details}>Select Number of Boxes</Text>
+      <Picker
+        selectedValue={numberOfBoxes}
+        style={styles.dropdown}
+        onValueChange={(itemValue) => setNumberOfBoxes(itemValue)}
+      >
+        {[...Array(10).keys()].map((n) => (
+          <Picker.Item key={n + 1} label={`${n + 1}`} value={n + 1} />
+        ))}
+      </Picker>
+
       <TouchableOpacity style={styles.goButton} onPress={handleGoPress}>
         <Text style={styles.goButtonText}>Go</Text>
       </TouchableOpacity>
@@ -97,6 +85,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    paddingHorizontal: 20,
   },
   vehicles: {
     marginTop: 20,
@@ -132,35 +121,19 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 50,
-    width: 370,
+    width: '100%',
     backgroundColor: 'white',
     marginTop: 20,
   },
-  checkboxContainer: {
-    flexDirection: 'row',
-    marginTop: 20,
-  },
-  checkbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  checkboxLabel: {
-    color: 'white',
-    marginLeft: 10,
-  },
   goButton: {
     backgroundColor: 'green',
-    height : 50,
-    width : 100 ,
     borderRadius: 5,
-    marginTop: 70,
-    justifyContent : 'center',
-    alignItems : 'center',
-    marginLeft : 130,
+    marginTop: 30,
+    paddingVertical: 15,
+    alignItems: 'center',
   },
   goButtonText: {
     color: 'white',
-    fontSize: 30,
+    fontSize: 20,
   },
 });
